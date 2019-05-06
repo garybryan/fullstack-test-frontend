@@ -1,24 +1,23 @@
 import React from 'react';
 import logo from './logo.svg';
-import './App.css';
+import './css/App.css';
+
+import SearchBar from './components/searchbar'
+import SearchResults from './components/searchresults'
+
+const TEST_RESULTS = [
+  {'name': 'Edinburgh', 'postcode': 'EH8 9BH'},
+  {'name': 'Leith', 'postcode': 'EH6 6AY'},
+];
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <h1>Store locator</h1>
+        <SearchBar/>
       </header>
+      <SearchResults results={TEST_RESULTS}/>
     </div>
   );
 }

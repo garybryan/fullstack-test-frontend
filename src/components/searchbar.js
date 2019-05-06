@@ -22,8 +22,16 @@ export default class SearchBar extends Component {
     this.debouncedLoadSuggestions = debounce(this.loadSuggestions, 100);
   }
 
-  search(query) {
-    return fetch(`${API_URL}stores?search=${query}`).then(
+  search(query, offset=null, limit=null) {
+    let url = `${API_URL}stores?search=${query}`;
+    // TODO would be nicer to build querystring properly instead of hard-coding ?, & etc.
+    if (offset) {
+      url += `&offset=${offset}`;
+    }
+    if (limit) {
+      url += `&limit=${limit}`;
+    }
+    return fetch(url).then(
       res => res.json()
     ).catch((error) => {
       alert("API error\n" + error);

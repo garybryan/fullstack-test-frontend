@@ -2,40 +2,45 @@ import React, { Component } from 'react';
 import '../css/searchbar.css';
 
 import Autosuggest from 'react-autosuggest';
-import debounce from 'lodash/debounce'
+import debounce from 'lodash/debounce';
 
-const API_URL = "http://localhost:8000/"
+const API_URL = "http://localhost:8000/";
+const LIMIT = 3;  // Max number of search results to load at once.
 
 const getSuggestionValue = (suggestion) => suggestion.name;
 const renderSuggestion = (suggestion) => (<span>{suggestion.name}, {suggestion.postcode}</span>);
 const shouldRenderSuggestions = (value) => value.length > 2;
 
+const search = (query, offset=null, limit=null) => {
+  let url = `${API_URL}stores?search=${query}`;
+  // TODO would be nicer to build querystring properly instead of hard-coding ?, & etc.
+  if (offset) {
+    url += `&offset=${offset}`;
+  }
+  if (limit) {
+    url += `&limit=${limit}`;
+  }
+  return fetch(url).then(
+    res => res.json()
+  ).catch((error) => {
+    alert("API error\n" + error);
+  });
+}
+
 export default class SearchBar extends Component {
-  constructor({setResults, setIsLoading}) {
-    super();
-    this.setResults = setResults;
-    this.setIsLoading = setIsLoading;
+  constructor(props) {
+    super(props);
+    console.log("props", props)
     this.state = {
       value: '',
-      suggestions: []
+      suggestions: [],
+      offset: 0
     };
     this.debouncedLoadSuggestions = debounce(this.loadSuggestions, 100);
   }
 
-  search(query, offset=null, limit=null) {
-    let url = `${API_URL}stores?search=${query}`;
-    // TODO would be nicer to build querystring properly instead of hard-coding ?, & etc.
-    if (offset) {
-      url += `&offset=${offset}`;
-    }
-    if (limit) {
-      url += `&limit=${limit}`;
-    }
-    return fetch(url).then(
-      res => res.json()
-    ).catch((error) => {
-      alert("API error\n" + error);
-    });
+  componentDidMount() {
+    this.props.setLoadMore(() => this.loadResults(this.state.offset, LIMIT, true));
   }
 
   onChange = (event, { newValue, method }) => {
@@ -43,8 +48,8 @@ export default class SearchBar extends Component {
   }
 
   loadSuggestions(value) {
-    this.search(value).then(
-      results => this.setState({ suggestions: results })
+    search(value).then(
+      result => this.setState({ suggestions: result.stores })
     );
   }
 
@@ -53,24 +58,22 @@ export default class SearchBar extends Component {
   };
 
   onSuggestionsClearRequested = () => {
-    this.setState({ suggestions: [] });
+    this.setState({suggestions: []});
   };
 
-  loadResults = () => {
-    this.setIsLoading(true);
-    return this.search(this.state.value).then(this.setResults).finally(() => {
-      this.setIsLoading(false);
-    });
+  loadResults = (offset, limit, append=false) => {
+    this.props.setIsLoading(true);
+    return search(this.state.value, offset, limit).then(data => this.props.setResults(data, append)).then(data =>
+      this.setState({offset: offset + data.stores.length})
+    ).finally(() =>
+      this.props.setIsLoading(false)
+    );
   };
 
   onSubmit = (event) => {
     event.preventDefault();
-    this.loadResults();
+    this.loadResults(0, LIMIT);
   }
-
-  showAll = (event) => {
-    this.setState({value: ''}, this.loadResults);
-  };
 
   render() {
     const { value, suggestions } = this.state;
@@ -85,14 +88,13 @@ export default class SearchBar extends Component {
           suggestions={suggestions}
           onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
           onSuggestionsClearRequested={this.onSuggestionsClearRequested}
-          onSuggestionSelected={this.loadResults}
+          onSuggestionSelected={() => this.loadResults(0, LIMIT)}
           getSuggestionValue={getSuggestionValue}
           renderSuggestion={renderSuggestion}
           shouldRenderSuggestions={shouldRenderSuggestions}
           inputProps={inputProps}
         />
         <input type="submit" value="Search" />
-        <input type="button" value="Show all" onClick={this.showAll} />
       </form>
     );
   }

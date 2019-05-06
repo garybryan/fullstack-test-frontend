@@ -10,6 +10,7 @@ class App extends Component {
     this.state = {
       results: [],
       isLoading: false,
+      canLoadMoreResults: false
     }
   }
 
@@ -17,8 +18,13 @@ class App extends Component {
     this.setState({isLoading});
   }
 
-  setResults = (results) => {
-    this.setState({results});
+  setResults = (data, append=false) => {
+    console.log(data)
+    this.setState(prevState => ({
+      results: append ? [...prevState.results, ...data.stores] : data.stores,
+      canLoadMoreResults: data.anyRemaining
+    }));
+    return data;
   }
 
   render() {
@@ -26,9 +32,14 @@ class App extends Component {
       <div className="App">
         <header className="App-header">
           <h1>Store locator</h1>
-          <SearchBar setIsLoading={this.setIsLoading} setResults={this.setResults}/>
+          <SearchBar setIsLoading={this.setIsLoading} setResults={this.setResults} setLoadMore={func => this.loadMoreFunc = func}/>
         </header>
-        <SearchResults results={this.state.results} isLoading={this.state.isLoading}/>
+        <SearchResults
+          results={this.state.results}
+          isLoading={this.state.isLoading}
+          canLoadMore={this.state.canLoadMoreResults}
+          loadMore={this.loadMoreFunc}
+         />
       </div>
     );
   }

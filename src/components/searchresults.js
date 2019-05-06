@@ -1,17 +1,27 @@
-import React from 'react';
+import React, { Component, Fragment } from 'react';
 
 import '../css/searchresults.css';
 import SearchResult from './searchresult'
 
-export default function SearchResults({results=[], isLoading=false}) {
-  if (isLoading) {
-    return (<p>Loading...</p>);
-  } else if (results.length === 0) {
-    return (<p>No results to display.</p>);
+export default class SearchResults extends Component {
+  loadMoreClick = (event) => {
+    event.preventDefault();
+    this.props.loadMore(event);
   }
-  return (
-    <ul className="search-results">
-      {results.map((store, i) => <SearchResult key={i} store={store}/>)}
-    </ul>
-  );
+
+  render() {
+    if (this.props.results.length === 0) {
+      return (<p>No results to display.</p>);
+    }
+
+    return (
+      <Fragment>
+        <ul className="search-results">
+          {this.props.results.map((store, i) => <SearchResult key={i} store={store}/>)}
+        </ul>
+        {this.props.canLoadMore && !this.props.isLoading && <a href="#" onClick={this.loadMoreClick}>Load more stores</a>}
+        {this.props.isLoading && (<p>Loading...</p>)}
+      </Fragment>
+    );
+  }
 }

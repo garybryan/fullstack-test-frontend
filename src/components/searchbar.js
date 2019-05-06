@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import '../css/searchbar.css';
 
 import Autosuggest from 'react-autosuggest';
+import debounce from 'lodash/debounce'
 
 const API_URL = "http://localhost:8000/"
 
@@ -18,6 +19,7 @@ export default class SearchBar extends Component {
       value: '',
       suggestions: []
     };
+    this.debouncedLoadSuggestions = debounce(this.loadSuggestions, 100);
   }
 
   search(query) {
@@ -32,11 +34,15 @@ export default class SearchBar extends Component {
     this.setState({ value: newValue });
   }
 
-  onSuggestionsFetchRequested = ({ value }) => {
+  loadSuggestions(value) {
     this.search(value).then(
       results => this.setState({ suggestions: results })
     );
   }
+
+  onSuggestionsFetchRequested = ({ value }) => {
+    this.debouncedLoadSuggestions(value);
+  };
 
   onSuggestionsClearRequested = () => {
     this.setState({ suggestions: [] });

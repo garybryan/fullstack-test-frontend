@@ -4,9 +4,22 @@ import '../css/searchresults.css';
 import SearchResult from './searchresult'
 
 export default class SearchResults extends Component {
+  constructor(props) {
+    super(props);
+    window.onscroll = () => {
+      if (
+        !this.props.isLoading
+        && this.props.canLoadMore
+        && window.innerHeight + document.documentElement.scrollTop === document.documentElement.offsetHeight
+      ) {
+        this.props.loadMore();
+      }
+    };
+  }
+
   loadMoreClick = (event) => {
     event.preventDefault();
-    this.props.loadMore(event);
+    this.props.loadMore();
   }
 
   render() {

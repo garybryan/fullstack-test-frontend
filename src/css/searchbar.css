@@ -9,6 +9,24 @@
 	font-size: 110%;
 }
 
-.store-search .search-input {
+.store-search .react-autosuggest__input {
 	width: 50vw;
+}
+
+.react-autosuggest__suggestions-container--open {
+	background: #fff;
+	border: 1px solid #282c34;
+	color: #282c34;
+    width: 50vw;
+    margin: 0 auto;
+    padding: 0;
+    text-align: left;
+    position: absolute;
+    left: 24vw;
+}
+
+.react-autosuggest__suggestions-container--open li {
+	margin: .5em 0;
+	list-style: none;
+	cursor: pointer;
 }

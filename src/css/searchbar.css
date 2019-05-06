@@ -17,12 +17,16 @@
 	background: #fff;
 	border: 1px solid #282c34;
 	color: #282c34;
-    width: 50vw;
+    width: 60vw;
     margin: 0 auto;
     padding: 0;
     text-align: left;
     position: absolute;
-    left: 24vw;
+    left: 20vw;
+}
+
+.react-autosuggest__suggestions-container--open ul {
+	padding: 0 1em;
 }
 
 .react-autosuggest__suggestions-container--open li {

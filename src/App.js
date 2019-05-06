@@ -1,5 +1,4 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { Component } from 'react';
 import './css/App.css';
 
 import SearchBar from './components/searchbar'
@@ -10,16 +9,32 @@ const TEST_RESULTS = [
   {'name': 'Leith', 'postcode': 'EH6 6AY'},
 ];
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <h1>Store locator</h1>
-        <SearchBar/>
-      </header>
-      <SearchResults results={TEST_RESULTS}/>
-    </div>
-  );
+class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      results: []
+    }
+    this.searchInput = React.createRef('input');
+  }
+  search = (event) => {
+    const query = this.searchInput.current.value;
+    event.preventDefault();
+    const results = TEST_RESULTS
+    this.setState({results});
+  }
+
+  render() {
+    return (
+      <div className="App">
+        <header className="App-header">
+          <h1>Store locator</h1>
+          <SearchBar searchFunc={this.search} inputRef={this.searchInput}/>
+        </header>
+        <SearchResults results={this.state.results}/>
+      </div>
+    );
+  }
 }
 
 export default App;

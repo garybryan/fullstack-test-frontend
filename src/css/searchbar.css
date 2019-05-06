@@ -1,0 +1,14 @@
+.store-search {
+	width: 70vw;
+	height: 2em;
+	padding: .5em 1em;
+}
+
+.store-search input {
+	padding: .5em 1em;
+	font-size: 110%;
+}
+
+.store-search .search-input {
+	width: 50vw;
+}

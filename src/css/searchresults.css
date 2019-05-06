@@ -1,0 +1,8 @@
+.search-results li {
+	width: 70vw;
+	display: block;
+	list-style: none;
+	margin: 0 auto;
+	font-size: 120%;
+	margin-bottom: 1em;
+}

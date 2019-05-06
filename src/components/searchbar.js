@@ -7,6 +7,7 @@ const API_URL = "http://localhost:8000/"
 
 const getSuggestionValue = (suggestion) => suggestion.name;
 const renderSuggestion = (suggestion) => (<span>{suggestion.name}, {suggestion.postcode}</span>);
+const shouldRenderSuggestions = (value) => value.length > 2;
 
 export default class SearchBar extends Component {
   constructor({setResults, setIsLoading}) {
@@ -73,6 +74,7 @@ export default class SearchBar extends Component {
           onSuggestionSelected={this.loadResults}
           getSuggestionValue={getSuggestionValue}
           renderSuggestion={renderSuggestion}
+          shouldRenderSuggestions={shouldRenderSuggestions}
           inputProps={inputProps}
         />
         <input type="submit" value="Search" />

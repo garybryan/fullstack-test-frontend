@@ -19,11 +19,12 @@ class App extends Component {
   }
 
   setResults = (data, append=false) => {
-    console.log(data)
-    this.setState(prevState => ({
-      results: append ? [...prevState.results, ...data.stores] : data.stores,
-      canLoadMoreResults: data.anyRemaining
-    }));
+    if (data) {
+      this.setState(prevState => ({
+        results: append ? [...prevState.results, ...data.stores] : data.stores,
+        canLoadMoreResults: data.anyRemaining
+      }));
+    }
     return data;
   }
 

@@ -62,9 +62,11 @@ export default class SearchBar extends Component {
 
   loadResults = (offset, limit, append=false) => {
     this.props.setIsLoading(true);
-    return search(this.state.value, offset, limit).then(data => this.props.setResults(data, append)).then(data =>
-      this.setState({offset: offset + data.stores.length})
-    ).finally(() =>
+    return search(this.state.value, offset, limit).then(data => this.props.setResults(data, append)).then(data => {
+      if (data) {
+        this.setState({offset: offset + data.stores.length})
+      }
+    }).finally(() =>
       this.props.setIsLoading(false)
     );
   };

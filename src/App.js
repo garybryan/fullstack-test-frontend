@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import './css/App.css';
 
-import SearchBar from './components/searchbar'
-import SearchResults from './components/searchresults'
+import SearchBar from './components/searchbar';
+import SearchResults from './components/searchresults';
+
+import image from './images/sleepydog.webp';
 
 class App extends Component {
   constructor(props) {
@@ -31,6 +33,9 @@ class App extends Component {
   render() {
     return (
       <div className="App">
+        <div className="image-row">
+          <img className="header-image" src={image}/>
+        </div>
         <header className="App-header">
           <h1>Store locator</h1>
           <SearchBar setIsLoading={this.setIsLoading} setResults={this.setResults} setLoadMore={func => this.loadMoreFunc = func}/>
